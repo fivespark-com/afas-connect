@@ -47,7 +47,7 @@
     "connect"
   ],
   "dependencies": {
-    "node-fetch": "^3.2.10",
+    "node-fetch": "^2.6.7",
     "soap": "^0.42.0"
   }
 }
