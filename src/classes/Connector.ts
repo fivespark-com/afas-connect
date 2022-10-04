@@ -56,7 +56,7 @@ export default abstract class Connector {
       }
     })
     if (response.ok) {
-      return await response.json() as TAfasRestProfileResponse;
+      return await response.json();
     } else {
       return false
     }
@@ -92,7 +92,7 @@ export default abstract class Connector {
     const response = await fetch(url, { method: "POST", body: JSON.stringify(data) })
 
     if (response.ok) {
-      const body = await response.json() as any;
+      const body = await response.json();
       return body.token
     } else {
       return false
