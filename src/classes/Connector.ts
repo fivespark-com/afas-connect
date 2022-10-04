@@ -2,6 +2,7 @@ import fetch, { RequestInit } from 'node-fetch';
 import * as soap from 'soap'
 import { IAfasConnectorConfig, Languages, TAfasRestProfileResponse, THttpMethods } from '../models';
 import { endpoints } from '../constants';
+import * as https from 'https';
 
 export default abstract class Connector {
   private AfasConfig: IAfasConnectorConfig;
@@ -114,7 +115,9 @@ export default abstract class Connector {
         headers: {
           Authorization: 'AfasToken ' + Buffer.from(this.token).toString('base64'),
           'Accept-Language': this.language
-        }
+        },
+        timeout: 0, // No timeout (but limited to OS setting)
+        agent: new https.Agent({ keepAlive: true })
       };
 
       if (body) {
