@@ -1,4 +1,4 @@
-import { RequestInit } from 'node-fetch';
+import * as axios from 'axios';
 import { IAfasConnectorConfig, TAfasRestProfileResponse, THttpMethods } from '../models';
 export default abstract class Connector {
     private AfasConfig;
@@ -23,7 +23,7 @@ export default abstract class Connector {
      * @param body {string} Optional, should be a valid JSON object
      * @param customConfig {RequestInit} default http request config
      */
-    protected http(url: string, method: THttpMethods, body?: object, customConfig?: RequestInit): Promise<any>;
+    protected http(url: string, method: THttpMethods, body?: object, customConfig?: axios.AxiosRequestConfig): Promise<any>;
     /**
      *
      * @param url {string} WSDL url

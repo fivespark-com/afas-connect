@@ -1,4 +1,4 @@
-import fetch, { RequestInit } from 'node-fetch';
+import * as axios from 'axios';
 import * as soap from 'soap'
 import { IAfasConnectorConfig, Languages, TAfasRestProfileResponse, THttpMethods } from '../models';
 import { endpoints } from '../constants';
@@ -108,39 +108,37 @@ export default abstract class Connector {
    * @param body {string} Optional, should be a valid JSON object
    * @param customConfig {RequestInit} default http request config
    */
-  protected async http(url: string, method: THttpMethods, body?: object, customConfig?: RequestInit): Promise<any> {
-    return new Promise (async (resolve, reject) => {
-      let config: RequestInit = {
-        method,
-        headers: {
-          Authorization: 'AfasToken ' + Buffer.from(this.token).toString('base64'),
-          'Accept-Language': this.language
-        },
-        timeout: 0, // No timeout (but limited to OS setting)
-        agent: new https.Agent({ keepAlive: true })
-      };
+  protected async http(url: string, method: THttpMethods, body?: object, customConfig?: axios.AxiosRequestConfig): Promise<any> {
+    let config: axios.AxiosRequestConfig = {
+      method,
+      headers: {
+        Authorization: 'AfasToken ' + Buffer.from(this.token).toString('base64'),
+        'Accept-Language': this.language
+      },
+      timeout: 0, // No timeout (but limited to OS setting)
+      httpsAgent: new https.Agent({ keepAlive: true })
+    };
 
-      if (body) {
-        config.body = JSON.stringify(body);
+    if (body) {
+      config.data = JSON.stringify(body);
+    }
+
+    if (customConfig) {
+      config = { ...config, ...customConfig };
+    }
+
+    try {
+      const response = await axios.default(url, config);
+      return response.data;
+    }
+    catch (err: any) {
+      if (err.response) {
+        throw { body: err.response.data, response: err.response };
       }
-  
-      if (customConfig) {
-        config = { ...config, ...customConfig };
+      else {
+        throw err;
       }
-  
-      const response = await fetch(url, config)
-      const rawBody = await response.text();
-  
-      if (response.ok) {
-        try {
-          resolve(JSON.parse(rawBody))
-        } catch (error) {
-          resolve(rawBody)
-        }
-      } else {
-        reject({ body: rawBody, response })
-      }
-    })
+    }
   }
 
   /**

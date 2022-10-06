@@ -26,7 +26,6 @@
   "homepage": "https://github.com/GarbageSlave/afas-connect#readme",
   "devDependencies": {
     "@types/jest": "^26.0.20",
-    "@types/node-fetch": "^2.5.10",
     "@types/sax": "^1.2.3",
     "jest": "^26.6.3",
     "prettier": "^2.2.1",
@@ -47,7 +46,7 @@
     "connect"
   ],
   "dependencies": {
-    "node-fetch": "^2.6.7",
+    "axios": "^0.27.2",
     "soap": "^0.42.0"
   }
 }
